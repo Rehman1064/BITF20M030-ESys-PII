@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Rubik" rel="stylesheet">
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+    <script src="http://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+</head>
+<body>
+    <h1>Student Interest System</h1><br><br>
+    <a href="/dash">Dashboard</a> | <a href="/">Add Student</a><br>
+    <h2>Students</h2>
+    <table id="show" border="3">
+        <thead id="dynamicHeader">
+        </thead>
+    </table>
+    <script>
+        var myData;
+    
+        $(document).ready(function () {
+            Display();
+        });
+    
+        function Display() {
+            var table;
+            var xyz = "test";
+            $.ajax({
+                type: "GET",
+                url: "/showalll",
+                success: function (result) {
+                    myData = result;
+                    if (myData != null || myData != "") {
+                        $('#dynamicHeader').html('<tr><th>RollNo</th><th>Name</th><th>Email</th><th>Gender</th><th>Dob</th><th>City</th><th>Interest</th><th>Department</th><th>Degree</th><th>Subject</th><th>StartDate</th><th>EndDate</th><th>Actions</th></tr>');
+                        if ($.fn.DataTable.isDataTable('#show')) {
+                            $('#show').DataTable().destroy();
+                        }
+                        table = $('#show').DataTable({
+                            data: myData,
+                            columns: [
+                                { data: "RollNo" },
+                                { data: "Name" },
+                                { data: "Email" },
+                                { data: "Gender" },
+                                { data: "Dob" },
+                                { data: "City" },
+                                { data: "Interest" },
+                                { data: "Department" },
+                                { data: "Degree" },
+                                { data: "Subject" },
+                                { data: "StartDate" },
+                                { data: "EndDate" },
+                                {
+                                    data: null,
+                                    render: function (data, type, row) {
+                                        return '<div><a href="/view/' + row.RollNo + '">View</a> | <a href="/update/' + row.RollNo + '">Update</a> | <a href="/delete/' + row.RollNo + '">Delete</a></div>';
+                                    }
+                                }
+                            ],
+                            lengthMenu: [3, 6, 9, 12, 30, 50],
+                            pageLength: 6,
+                            columnDefs: [
+                                {
+                                    targets: -1, 
+                                    width: '150px'
+                                }
+                            ]
+                        });
+                    }
+                }
+            });
+        }
+    </script>
+    
+    
+</body>
+
+</html>
